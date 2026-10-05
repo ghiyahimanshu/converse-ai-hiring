@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ConverseAI — AI Hiring System for Indian Enterprises</title>
+<meta name="description" content="ConverseAI handles outreach, screening, and scheduling across WhatsApp, phone, and chat — so your recruiters focus on decisions, not coordination." />
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet" />
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg:        #F7F8FC;
+  --surface:   #FFFFFF;
+  --ink:       #172033;
+  --ink-2:     #4B5567;
+  --ink-3:     #7C8699;
+  --purple:    #6D3CE8;
+  --purple-d:  #5A2FD0;
+  --purple-l:  #8B5CF6;
+  --lavender:  #F0EBFF;
+  --lavender-d:#E0D5FD;
+  --green:     #12B76A;
+  --amber:     #F59E0B;
+  --red:       #EF4444;
+  --border:    rgba(109,60,232,.12);
+  --border-2:  #E8EAF0;
+  --shadow-sm: 0 1px 3px rgba(23,32,51,.06), 0 4px 12px rgba(23,32,51,.04);
+  --shadow-md: 0 4px 16px rgba(23,32,51,.08), 0 1px 4px rgba(23,32,51,.04);
+  --shadow-lg: 0 12px 40px rgba(109,60,232,.14), 0 2px 8px rgba(23,32,51,.06);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --maxw: 1160px;
+  --wa: #25D366;
+}
+
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.6;font-size:16px}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul,ol{list-style:none}
+input,textarea,select{font-family:inherit;font-size:inherit}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ── LAYOUT ── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.section{padding:96px 0}
+.section-sm{padding:64px 0}
+
+/* ── TYPOGRAPHY ── */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--lavender);color:var(--purple);
+  padding:5px 12px;border-radius:var(--radius-pill);
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:18px;
+}
+h1{font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:1.12;letter-spacing:-.03em;font-weight:800}
+h2{font-size:clamp(1.7rem,3.2vw,2.4rem);line-height:1.18;letter-spacing:-.025em;font-weight:800}
+h3{font-size:1.1rem;line-height:1.35;letter-spacing:-.015em;font-weight:700}
+.lead{font-size:1.08rem;color:var(--ink-2);line-height:1.7;max-width:580px}
+.center{text-align:center}
+.center .lead{margin:0 auto}
+strong{font-weight:600;color:var(--ink)}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-size:.94rem;font-weight:600;padding:12px 24px;border-radius:var(--radius-pill);
+  transition:all .18s ease;white-space:nowrap;border:2px solid transparent;
+}
+.btn-primary{background:var(--purple);color:#fff;border-color:var(--purple)}
+.btn-primary:hover{background:var(--purple-d);border-color:var(--purple-d);transform:translateY(-1px);box-shadow:0 6px 20px rgba(109,60,232,.3)}
+.btn-outline{background:transparent;color:var(--purple);border-color:var(--border)}
+.btn-outline:hover{border-color:var(--purple);background:var(--lavender)}
+.btn-ghost{background:transparent;color:var(--ink-2);border-color:transparent;padding:12px 18px}
+.btn-ghost:hover{background:var(--border-2);color:var(--ink)}
+.btn-wa{background:var(--wa);color:#064e2f;border-color:var(--wa)}
+.btn-wa:hover{background:#1ebe5d;transform:translateY(-1px)}
+.btn-lg{padding:15px 32px;font-size:1rem}
+.btn-sm{padding:8px 16px;font-size:.85rem}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm)}
+.card-purple{background:var(--lavender);border:1px solid var(--lavender-d);border-radius:var(--radius-lg);padding:28px}
+
+/* ── STATUS BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:var(--radius-pill);font-size:11px;font-weight:600;letter-spacing:.04em}
+.badge-green{background:#DCFCE7;color:#16A34A}
+.badge-amber{background:#FEF3C7;color:#D97706}
+.badge-purple{background:var(--lavender);color:var(--purple)}
+.badge-gray{background:var(--border-2);color:var(--ink-3)}
+.badge-red{background:#FEE2E2;color:#DC2626}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ══════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════ */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(247,248,252,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border-2);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-logo img{height:26px;width:auto}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-links a{
+  padding:7px 13px;border-radius:var(--radius-sm);
+  font-size:.87rem;font-weight:500;color:var(--ink-2);
+  transition:all .15s;
+}
+.nav-links a:hover{background:var(--lavender);color:var(--purple)}
+.nav-cta{flex-shrink:0}
+.nav-mobile-toggle{display:none;padding:8px;border-radius:var(--radius-sm);color:var(--ink-2)}
+.nav-mobile-toggle:hover{background:var(--border-2)}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-mobile-toggle{display:flex;align-items:center}
+  .nav-cta .btn{padding:9px 18px;font-size:.85rem}
+}
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+.hero{padding:80px 0 72px}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-kicker{margin-bottom:6px}
+.hero h1{margin-bottom:22px}
+.hero h1 span{color:var(--purple)}
+.hero .lead{margin-bottom:36px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.hero-trust{margin-top:36px;display:flex;align-items:center;gap:14px}
+.hero-trust-avatars{display:flex}
+.hero-trust-avatars span{
+  width:32px;height:32px;border-radius:50%;border:2px solid var(--surface);
+  background:var(--lavender);display:flex;align-items:center;justify-content:center;
+  font-size:14px;margin-left:-8px;
+}
+.hero-trust-avatars span:first-child{margin-left:0}
+.hero-trust-text{font-size:.84rem;color:var(--ink-3)}
+.hero-trust-text strong{color:var(--ink-2)}
+
+/* Hero right panel */
+.hero-panel{display:flex;flex-direction:column;gap:14px}
+.hero-card{
+  background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius-lg);
+  padding:18px 20px;box-shadow:var(--shadow-md);
+}
+.hero-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hero-card-title{font-size:.82rem;font-weight:600;color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase}
+.candidate-msg{
+  background:var(--lavender);border-radius:12px 12px 12px 4px;
+  padding:10px 14px;font-size:.88rem;color:var(--ink);line-height:1.5;
+  display:inline-block;max-width:240px;margin-bottom:8px;
+}
+.ai-msg{
+  background:var(--purple);border-radius:12px 12px 4px 12px;
+  padding:10px 14px;font-size:.88rem;color:#fff;line-height:1.5;
+  display:inline-block;max-width:240px;margin-left:auto;margin-bottom:8px;
+}
+.msg-row{display:flex;flex-direction:column}
+.msg-row.ai{align-items:flex-end}
+.msg-time{font-size:.72rem;color:var(--ink-3);margin-top:2px;padding:0 4px}
+
+.recruiter-card .criteria-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--border-2);font-size:.85rem;
+}
+.recruiter-card .criteria-row:last-child{border-bottom:none}
+.criteria-label{color:var(--ink-2);flex:1}
+.criteria-score{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:700;
+}
+.score-hi{background:#DCFCE7;color:#16A34A}
+.score-md{background:#FEF3C7;color:#D97706}
+.score-lo{background:#FEE2E2;color:#DC2626}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:48px}
+  .hero-panel{max-width:480px}
+}
+@media(max-width:600px){
+  .hero{padding:56px 0 48px}
+  .hero-actions{flex-direction:column;align-items:flex-start}
+}
+
+/* ══════════════════════════════════════════════
+   LOGOS
+══════════════════════════════════════════════ */
+.logos-section{padding:32px 0 48px}
+.logos-label{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:20px;text-align:center}
+.logos-grid{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 32px}
+.logos-grid img{height:32px;width:auto;object-fit:contain;filter:grayscale(100%) opacity(.45);transition:filter .2s}
+.logos-grid img:hover{filter:grayscale(0%) opacity(.85)}
+
+/* ══════════════════════════════════════════════
+   HOW IT WORKS (5-tab workflow)
+══════════════════════════════════════════════ */
+.workflow-tabs{display:flex;gap:4px;background:var(--border-2);border-radius:var(--radius-pill);padding:4px;overflow-x:auto;width:fit-content;margin:36px auto 0}
+.workflow-tab{
+  padding:9px 20px;border-radius:var(--radius-pill);
+  font-size:.88rem;font-weight:600;color:var(--ink-3);
+  transition:all .18s;white-space:nowrap;cursor:pointer;
+}
+.workflow-tab.active{background:var(--surface);color:var(--purple);box-shadow:var(--shadow-sm)}
+.workflow-tab:hover:not(.active){color:var(--ink-2)}
+
+.workflow-panels{margin-top:36px}
+.workflow-panel{display:none;animation:fadeIn .2s ease}
+.workflow-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.workflow-content h3{font-size:1.35rem;margin-bottom:12px}
+.workflow-content .lead{font-size:1rem;margin-bottom:24px}
+.workflow-details{display:flex;flex-direction:column;gap:10px}
+.workflow-detail{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius-md)}
+.workflow-detail-icon{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--lavender);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.workflow-detail-text{font-size:.88rem;color:var(--ink-2);line-height:1.5}
+.workflow-detail-text strong{display:block;font-size:.88rem;color:var(--ink);margin-bottom:2px}
+
+.workflow-visual{position:sticky;top:80px}
+.workflow-mock{background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius-xl);padding:20px;box-shadow:var(--shadow-lg)}
+.mock-topbar{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.mock-dot{width:10px;height:10px;border-radius:50%}
+.mock-dot:nth-child(1){background:#FF5F57}
+.mock-dot:nth-child(2){background:#FFBD2E}
+.mock-dot:nth-child(3){background:#28C840}
+.mock-title{font-size:.8rem;color:var(--ink-3);margin-left:auto;font-weight:500}
+
+@media(max-width:900px){
+  .workflow-panel.active{grid-template-columns:1fr}
+  .workflow-visual{display:none}
+}
+@media(max-width:600px){
+  .workflow-tabs{width:100%;justify-content:flex-start}
+}
+
+/* ══════════════════════════════════════════════
+   CANDIDATE JOURNEY
+══════════════════════════════════════════════ */
+.journey-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.journey-step{background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:24px;position:relative;overflow:hidden}
+.journey-step::before{content:attr(data-num);position:absolute;top:-8px;right:12px;font-size:4rem;font-weight:900;color:var(--lavender);line-height:1;user-select:none}
+.journey-step-icon{width:44px;height:44px;border-radius:var(--radius-md);background:var(--lavender);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.journey-step h4{font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.journey-step p{font-size:.85rem;color:var(--ink-2);line-height:1.55}
+.journey-disclosure{background:var(--lavender);border-left:3px solid var(--purple);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:8px 12px;margin-top:10px;font-size:.8rem;color:var(--purple);font-weight:500}
+
+@media(max-width:900px){.journey-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){.journey-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════════════════
+   RECRUITER EVIDENCE REPORT
+══════════════════════════════════════════════ */
+.evidence-demo{
+  background:var(--surface);border:1px solid var(--border-2);
+  border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg);
+  margin-top:40px;
+}
+.evidence-toolbar{
+  background:var(--bg);border-bottom:1px solid var(--border-2);
+  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.evidence-toolbar-left{display:flex;align-items:center;gap:10px}
+.candidate-avatar{
+  width:34px;height:34px;border-radius:50%;background:var(--lavender);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--purple);
+}
+.candidate-name{font-size:.9rem;font-weight:600;color:var(--ink)}
+.candidate-role{font-size:.78rem;color:var(--ink-3);margin-top:1px}
+.evidence-body{display:grid;grid-template-columns:260px 1fr;min-height:380px}
+.evidence-sidebar{border-right:1px solid var(--border-2);padding:16px}
+.evidence-sidebar-title{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.criterion-item{
+  padding:10px 12px;border-radius:var(--radius-md);cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  transition:background .14s;margin-bottom:4px;
+}
+.criterion-item:hover{background:var(--bg)}
+.criterion-item.active{background:var(--lavender)}
+.criterion-label{font-size:.84rem;font-weight:500;color:var(--ink-2);flex:1;line-height:1.3}
+.criterion-item.active .criterion-label{color:var(--purple);font-weight:600}
+.criterion-expand{width:20px;height:20px;border-radius:50%;background:var(--border-2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ink-3);flex-shrink:0;transition:all .14s}
+.criterion-item.active .criterion-expand{background:var(--purple);color:#fff;transform:rotate(90deg)}
+
+.evidence-main{padding:20px 24px;overflow:hidden}
+.evidence-criterion-detail{display:none}
+.evidence-criterion-detail.active{display:block;animation:fadeIn .18s ease}
+.evidence-q{font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.evidence-finding{font-size:.92rem;color:var(--ink);line-height:1.6;margin-bottom:14px}
+.evidence-quote{
+  background:var(--bg);border-left:3px solid var(--purple);
+  padding:10px 14px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:.85rem;color:var(--ink-2);font-style:italic;line-height:1.55;margin-bottom:12px;
+}
+.evidence-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.evidence-link{font-size:.8rem;color:var(--purple);font-weight:500;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.evidence-actions{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-2)}
+
+@media(max-width:700px){
+  .evidence-body{grid-template-columns:1fr}
+  .evidence-sidebar{border-right:none;border-bottom:1px solid var(--border-2);padding:12px}
+}
+
+/* ══════════════════════════════════════════════
+   INTEGRATIONS + RESPONSIBILITY MATRIX
+══════════════════════════════════════════════ */
+.integrations-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px}
+.integration-card{background:var(--surface);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:24px}
+.integration-card h4{font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--ink)}
+.int-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-2);font-size:.88rem}
+.int-row:last-child{border-bottom:none}
+.int-icon{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--lavender);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.int-name{font-weight:600;color:var(--ink);flex:1}
+.int-note{font-size:.78rem;color:var(--ink-3)}
+
+.matrix-table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:16px}
+.matrix-table th{padding:10px 12px;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);border-bottom:2px solid var(--border-2)}
+.matrix-table td{padding:11px 12px;border-bottom:1px solid var(--border-2);vertical-align:top;line-height:1.4}
+.matrix-table tr:last-child td{border-bottom:none}
+.owner-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-pill);font-size:.75rem;font-weight:600}
+.owner-client{background:#DBEAFE;color:#1D4ED8}
+.owner-converse{background:var(--lavender);color:var(--purple)}
+.owner-shared{background:#FEF3C7;color:#92400E}
+
+@media(max-width:800px){.integrations-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════════════════
+   PIPELINE STATUS
+══════════════════════════════════════════════ */
+.pipeline-table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:20px;background:var(--surface);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-2)}
+.pipeline-table th{padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);background:var(--bg);border-bottom:1px solid var(--border-2)}
+.pipeline-table td{padding:12px 14px;border-bottom:1px solid var(--border-2);color:var(--ink-2)}
+.pipeline-table tr:last-child td{border-bottom:none}
+.pipeline-table tr:hover td{background:var(--bg)}
+
+/* ══════════════════════════════════════════════
+   PILOT PATH
+══════════════════════════════════════════════ */
+.pilot-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:36px;position:relative}
+.pilot-steps::before{
+  content:'';position:absolute;top:28px;left:14%;right:14%;height:2px;
+  background:linear-gradient(90deg,var(--lavender-d),var(--purple),var(--lavender-d));
+  z-index:0;
+}
+.pilot-step{position:relative;z-index:1;text-align:center}
+.pilot-step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--lavender-d);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+  font-size:1.1rem;font-weight:800;color:var(--purple);
+  box-shadow:var(--shadow-sm);
+}
+.pilot-step h4{font-size:.92rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.pilot-step p{font-size:.82rem;color:var(--ink-3);line-height:1.5}
+
+.pilot-bottom{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px;align-items:start}
+.pricing-card{background:var(--lavender);border:1px solid var(--lavender-d);border-radius:var(--radius-xl);padding:28px}
+.pricing-card h3{margin-bottom:6px}
+.pricing-card .lead{font-size:.92rem;margin-bottom:20px}
+.pricing-items{display:flex;flex-direction:column;gap:10px}
+.pricing-item{display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)}
+.pricing-item-icon{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px}
+.pricing-note{margin-top:16px;font-size:.8rem;color:var(--ink-3);line-height:1.5}
+
+@media(max-width:800px){
+  .pilot-steps{grid-template-columns:repeat(2,1fr)}
+  .pilot-steps::before{display:none}
+  .pilot-bottom{grid-template-columns:1fr}
+}
+@media(max-width:480px){.pilot-steps{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════════════════
+   CONTACT FORM
+══════════════════════════════════════════════ */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.contact-info h2{margin-bottom:12px}
+.contact-info .lead{margin-bottom:28px}
+.contact-channels{display:flex;flex-direction:column;gap:12px}
+.contact-channel{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;background:var(--surface);border:1px solid var(--border-2);
+  border-radius:var(--radius-md);transition:border-color .15s;
+}
+.contact-channel:hover{border-color:var(--purple)}
+.contact-channel-icon{font-size:20px;flex-shrink:0}
+.contact-channel-label{font-size:.78rem;color:var(--ink-3);font-weight:500}
+.contact-channel-value{font-size:.88rem;color:var(--ink);font-weight:600}
+
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:.82rem;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.form-input{
+  width:100%;padding:11px 14px;
+  background:var(--surface);border:1.5px solid var(--border-2);border-radius:var(--radius-md);
+  font-size:.9rem;color:var(--ink);transition:border-color .15s,box-shadow .15s;
+  outline:none;
+}
+.form-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(109,60,232,.1)}
+.form-input.error{border-color:var(--red)}
+.form-input::placeholder{color:var(--ink-3)}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237C8699' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.form-error{font-size:.78rem;color:var(--red);margin-top:4px;display:none}
+.form-group.has-error .form-error{display:block}
+.form-group.has-error .form-input{border-color:var(--red)}
+.form-submit{width:100%;padding:14px;font-size:1rem;font-weight:700;margin-top:6px}
+
+.form-success{
+  display:none;text-align:center;padding:40px 24px;
+  background:var(--lavender);border:1px solid var(--lavender-d);border-radius:var(--radius-xl);
+}
+.form-success.visible{display:block;animation:fadeIn .3s ease}
+.form-success-icon{font-size:2.5rem;margin-bottom:12px}
+.form-success h3{margin-bottom:8px;color:var(--purple)}
+.form-success p{font-size:.9rem;color:var(--ink-2)}
+
+@media(max-width:800px){.contact-grid{grid-template-columns:1fr;gap:40px}}
+
+/* ══════════════════════════════════════════════
+   FAQS
+══════════════════════════════════════════════ */
+.faq-list{max-width:720px;margin:36px auto 0}
+.faq-item{border-bottom:1px solid var(--border-2)}
+.faq-question{
+  width:100%;text-align:left;padding:18px 0;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  font-size:.95rem;font-weight:600;color:var(--ink);cursor:pointer;
+  transition:color .15s;background:none;
+}
+.faq-question:hover{color:var(--purple)}
+.faq-chevron{
+  width:22px;height:22px;border-radius:50%;background:var(--border-2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  color:var(--ink-3);flex-shrink:0;margin-top:1px;transition:all .18s;
+}
+.faq-item.open .faq-chevron{background:var(--purple);color:#fff;transform:rotate(180deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .28s ease,padding .28s ease}
+.faq-item.open .faq-answer{max-height:400px}
+.faq-answer-inner{padding:0 0 18px;font-size:.9rem;color:var(--ink-2);line-height:1.7}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+.footer{background:var(--ink);color:rgba(255,255,255,.6);padding:48px 0 32px}
+.footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:36px}
+.footer-brand img{height:24px;width:auto;margin-bottom:12px}
+.footer-brand p{font-size:.85rem;line-height:1.6;max-width:280px}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.footer-links a{font-size:.85rem;color:rgba(255,255,255,.5);transition:color .15s}
+.footer-links a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:.8rem;color:rgba(255,255,255,.35)}
+.footer-legal{display:flex;gap:16px}
+.footer-legal a{font-size:.78rem;color:rgba(255,255,255,.35)}
+.footer-legal a:hover{color:rgba(255,255,255,.6)}
+
+@media(max-width:640px){
+  .footer-grid{grid-template-columns:1fr}
+  .footer-links{justify-content:flex-start}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+}
+
+/* ══════════════════════════════════════════════
+   SECTION DIVIDERS / BG ACCENTS
+══════════════════════════════════════════════ */
+.section-alt{background:var(--surface)}
+.section-purple{background:var(--lavender)}
+.divider{height:1px;background:var(--border-2);margin:0}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="wrap nav-inner">
+    <a href="#" class="nav-logo" aria-label="ConverseAI home">
+      <img src="logo-dark.png" alt="ConverseAI" />
+    </a>
+    <div class="nav-links" role="list">
+      <a href="#how-it-works" role="listitem">How it works</a>
+      <a href="#candidate-journey" role="listitem">Candidate experience</a>
+      <a href="#evidence-report" role="listitem">Recruiter view</a>
+      <a href="#integrations" role="listitem">Integrations</a>
+      <a href="#pilot" role="listitem">Pilot</a>
+      <a href="#faqs" role="listitem">FAQs</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-primary btn-sm">Discuss a pilot</a>
+    </div>
+    <button class="nav-mobile-toggle" aria-label="Open menu" onclick="toggleMobileMenu()">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="wrap hero-grid">
+
+    <!-- Left: copy -->
+    <div class="hero-left">
+      <div class="eyebrow" aria-hidden="true">
+        <span>✦</span> AI Hiring Infrastructure
+      </div>
+      <h1 id="hero-heading">Keep hiring moving.<br /><span>Keep people in control.</span></h1>
+      <p class="lead">ConverseAI handles outreach, screening, and scheduling across WhatsApp, phone, and chat — so your recruiters spend time on decisions, not coordination.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary btn-lg">Discuss a pilot</a>
+        <a href="#how-it-works" class="btn btn-outline btn-lg">See how it works</a>
+      </div>
+      <div class="hero-trust" aria-label="Used by companies across India">
+        <div class="hero-trust-avatars" aria-hidden="true">
+          <span>T</span><span>M</span><span>Z</span><span>R</span>
+        </div>
+        <p class="hero-trust-text"><strong>Used by teams</strong> across FMCG, fintech, and manufacturing</p>
+      </div>
+    </div>
+
+    <!-- Right: UI mockup -->
+    <div class="hero-panel" aria-hidden="true">
+
+      <!-- Candidate conversation card -->
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <span class="hero-card-title">WhatsApp Screening</span>
+          <span class="badge badge-green"><span class="dot"></span>Live</span>
+        </div>
+        <div class="msg-row">
+          <div class="candidate-msg">Hi, I saw the opening for Area Sales Manager. Still accepting applications?</div>
+          <span class="msg-time">10:02</span>
+        </div>
+        <div class="msg-row ai">
+          <div class="ai-msg">Hi Ravi! Yes, we're actively hiring. This takes about 8 minutes — you can pause and resume anytime. Ready to start?</div>
+          <span class="msg-time">10:02</span>
+        </div>
+        <div class="msg-row">
+          <div class="candidate-msg">Yes, let's go</div>
+          <span class="msg-time">10:03</span>
+        </div>
+        <div class="msg-row ai">
+          <div class="ai-msg">Great! You're speaking with an AI assistant on behalf of the hiring team. First — which city are you currently based in?</div>
+          <span class="msg-time">10:03</span>
+        </div>
+      </div>
+
+      <!-- Recruiter evidence card -->
+      <div class="hero-card recruiter-card">
+        <div class="hero-card-header">
+          <span class="hero-card-title">Recruiter Evidence Summary</span>
+          <span class="badge badge-purple">Awaiting review</span>
+        </div>
+        <div class="criteria-row" role="row">
+          <span class="criteria-label">Territory management experience</span>
+          <span class="criteria-score score-hi" aria-label="High match">✓</span>
+        </div>
+        <div class="criteria-row" role="row">
+          <span class="criteria-label">Current CTC range</span>
+          <span class="criteria-score score-hi" aria-label="High match">✓</span>
+        </div>
+        <div class="criteria-row" role="row">
+          <span class="criteria-label">Available to join in 30 days</span>
+          <span class="criteria-score score-md" aria-label="Partial match">~</span>
+        </div>
+        <div class="criteria-row" role="row">
+          <span class="criteria-label">Distributor network depth</span>
+          <span class="criteria-score score-lo" aria-label="Low match">!</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ LOGOS ══════════════ -->
+<div class="logos-section section-alt">
+  <div class="wrap">
+    <p class="logos-label">Teams that have worked with ConverseAI</p>
+    <div class="logos-grid" role="list" aria-label="Client logos">
+      <img src="https://theconverseai.com/logos/tata-motors.jpg" alt="Tata Motors" loading="lazy" />
+      <img src="https://theconverseai.com/logos/mapsor.jpg" alt="Mapsor Experiential Weddings" loading="lazy" />
+      <img src="https://theconverseai.com/logos/meghaa-modi.png" alt="Meghaa Modi Design Studio" loading="lazy" />
+      <img src="https://theconverseai.com/logos/zapp-loans.webp" alt="Zapp Loans" loading="lazy" />
+      <img src="https://theconverseai.com/logos/readiprint.svg" alt="Readiprint Fashions" loading="lazy" />
+      <img src="https://theconverseai.com/logos/heritage-food-diary.jpg" alt="Heritage Food Diary" loading="lazy" />
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section id="how-it-works" class="section" aria-labelledby="workflow-heading">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">How it works</div>
+      <h2 id="workflow-heading">Five stages, fully covered</h2>
+      <p class="lead">Each stage of your pipeline runs with a clear handoff between AI automation and recruiter judgment. Nothing moves without the right person approving it.</p>
+    </div>
+
+    <div class="workflow-tabs" role="tablist" aria-label="Workflow stages">
+      <button class="workflow-tab active" role="tab" aria-selected="true" aria-controls="panel-engage" id="tab-engage" onclick="switchTab('engage')">Engage</button>
+      <button class="workflow-tab" role="tab" aria-selected="false" aria-controls="panel-screen" id="tab-screen" onclick="switchTab('screen')">Screen</button>
+      <button class="workflow-tab" role="tab" aria-selected="false" aria-controls="panel-interview" id="tab-interview" onclick="switchTab('interview')">Interview</button>
+      <button class="workflow-tab" role="tab" aria-selected="false" aria-controls="panel-followup" id="tab-followup" onclick="switchTab('followup')">Follow Up</button>
+      <button class="workflow-tab" role="tab" aria-selected="false" aria-controls="panel-handoff" id="tab-handoff" onclick="switchTab('handoff')">Handoff</button>
+    </div>
+
+    <div class="workflow-panels">
+
+      <!-- ENGAGE -->
+      <div class="workflow-panel active" id="panel-engage" role="tabpanel" aria-labelledby="tab-engage">
+        <div class="workflow-content">
+          <h3>Reach candidates where they actually respond</h3>
+          <p class="lead">ConverseAI sends the first outreach across WhatsApp, SMS, or email — with personalised messages for each opening. Response rates average 3–5× higher than email-only campaigns.</p>
+          <div class="workflow-details">
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">📲</div>
+              <div class="workflow-detail-text"><strong>WhatsApp-first outreach</strong>Personalised messages sent from a verified business number — not a blast tool.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">🌐</div>
+              <div class="workflow-detail-text"><strong>Hindi + English support</strong>Candidates can respond in their preferred language — no friction at first contact.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">⏱️</div>
+              <div class="workflow-detail-text"><strong>Smart follow-up timing</strong>Second and third touches are sent only to non-responders, at intervals you configure.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-visual">
+          <div class="workflow-mock">
+            <div class="mock-topbar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-title">Outreach queue — Area Sales Manager</span>
+            </div>
+            <table style="width:100%;font-size:.84rem;border-collapse:collapse">
+              <thead><tr style="border-bottom:1px solid var(--border-2)">
+                <th style="padding:6px 8px;text-align:left;color:var(--ink-3);font-weight:600;font-size:.75rem">Candidate</th>
+                <th style="padding:6px 8px;text-align:left;color:var(--ink-3);font-weight:600;font-size:.75rem">Channel</th>
+                <th style="padding:6px 8px;text-align:left;color:var(--ink-3);font-weight:600;font-size:.75rem">Status</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border-2)"><td style="padding:8px">Ravi S.</td><td style="padding:8px">WhatsApp</td><td style="padding:8px"><span class="badge badge-green"><span class="dot"></span>Responded</span></td></tr>
+                <tr style="border-bottom:1px solid var(--border-2)"><td style="padding:8px">Priya M.</td><td style="padding:8px">WhatsApp</td><td style="padding:8px"><span class="badge badge-amber"><span class="dot"></span>Sent</span></td></tr>
+                <tr style="border-bottom:1px solid var(--border-2)"><td style="padding:8px">Ankit R.</td><td style="padding:8px">SMS</td><td style="padding:8px"><span class="badge badge-gray"><span class="dot"></span>Queued</span></td></tr>
+                <tr><td style="padding:8px">Sunita K.</td><td style="padding:8px">WhatsApp</td><td style="padding:8px"><span class="badge badge-green"><span class="dot"></span>Responded</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN -->
+      <div class="workflow-panel" id="panel-screen" role="tabpanel" aria-labelledby="tab-screen">
+        <div class="workflow-content">
+          <h3>Structured screening — no recruiter time needed</h3>
+          <p class="lead">The AI conducts a full screening conversation against your defined criteria: experience, location, salary expectations, notice period, and any role-specific questions you specify.</p>
+          <div class="workflow-details">
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">📋</div>
+              <div class="workflow-detail-text"><strong>Your criteria, not ours</strong>Screening criteria are configured for each role. Nothing generic — every question maps to a shortlist decision.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">🤖</div>
+              <div class="workflow-detail-text"><strong>AI disclosure built in</strong>Candidates are told they're speaking with an AI from the first message — no ambiguity.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">⏸️</div>
+              <div class="workflow-detail-text"><strong>Pause and resume</strong>Candidates can drop off mid-screening and pick up where they left off — on any channel.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-visual">
+          <div class="workflow-mock">
+            <div class="mock-topbar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-title">Screening — Ravi S.</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div class="msg-row ai" style="align-items:flex-end"><div class="ai-msg" style="max-width:100%;font-size:.82rem">How many years of direct distributor management experience do you have?</div></div>
+              <div class="msg-row"><div class="candidate-msg" style="font-size:.82rem">About 6 years, mostly in FMCG — last 3 with a national FMCG brand in UP</div></div>
+              <div class="msg-row ai" style="align-items:flex-end"><div class="ai-msg" style="max-width:100%;font-size:.82rem">That's helpful context. What's your current CTC, roughly?</div></div>
+              <div style="padding:8px;background:var(--bg);border-radius:var(--radius-sm);margin-top:4px">
+                <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--ink-3)"><span>⚡</span>Criteria logged: distributor experience ✓, FMCG background ✓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERVIEW -->
+      <div class="workflow-panel" id="panel-interview" role="tabpanel" aria-labelledby="tab-interview">
+        <div class="workflow-content">
+          <h3>AI-assisted or fully AI-conducted interviews</h3>
+          <p class="lead">For shortlisted candidates, ConverseAI can run a structured interview over phone or WhatsApp — recording responses against each competency. Recruiters review transcripts, not call recordings.</p>
+          <div class="workflow-details">
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">🎯</div>
+              <div class="workflow-detail-text"><strong>Competency-mapped questions</strong>Interview questions are built from your JD and competency framework — not a default bank.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">📝</div>
+              <div class="workflow-detail-text"><strong>Full transcript delivered</strong>Every interview produces a structured evidence report — ready for your recruiter to review in minutes, not hours.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">👤</div>
+              <div class="workflow-detail-text"><strong>Human fallback available</strong>Candidates can request a human interviewer at any point — the system hands off without losing context.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-visual">
+          <div class="workflow-mock">
+            <div class="mock-topbar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-title">Interview evidence — Ravi S.</span>
+            </div>
+            <div style="font-size:.82rem;display:flex;flex-direction:column;gap:10px">
+              <div style="padding:10px 12px;background:var(--bg);border-radius:var(--radius-md)">
+                <div style="font-weight:600;color:var(--ink);margin-bottom:4px">Distributor conflict resolution</div>
+                <div style="color:var(--ink-2);line-height:1.5">"Restructured the channel by introducing tiered margins — took 45 days, no supply disruption."</div>
+                <div style="margin-top:6px"><span class="badge badge-green">Strong evidence</span></div>
+              </div>
+              <div style="padding:10px 12px;background:var(--bg);border-radius:var(--radius-md)">
+                <div style="font-weight:600;color:var(--ink);margin-bottom:4px">Target achievement under pressure</div>
+                <div style="color:var(--ink-2);line-height:1.5">"Closed FY at 97% despite a Q3 supply gap — shifted focus to premium SKUs."</div>
+                <div style="margin-top:6px"><span class="badge badge-green">Strong evidence</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOLLOW UP -->
+      <div class="workflow-panel" id="panel-followup" role="tabpanel" aria-labelledby="tab-followup">
+        <div class="workflow-content">
+          <h3>No candidate falls through the cracks</h3>
+          <p class="lead">ConverseAI tracks every candidate's state in the pipeline and sends timely follow-ups — for scheduling confirmations, document requests, or status updates — without recruiter intervention.</p>
+          <div class="workflow-details">
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">🔔</div>
+              <div class="workflow-detail-text"><strong>Status-aware nudges</strong>Follow-up messages are triggered by pipeline state — not calendar — so nothing is premature or missed.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">📅</div>
+              <div class="workflow-detail-text"><strong>Reschedule handling</strong>Candidates can request a new slot via WhatsApp — the system updates the calendar without recruiter involvement.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">✉️</div>
+              <div class="workflow-detail-text"><strong>Rejection with dignity</strong>Unsuccessful candidates receive a timely, respectful message — your brand remains intact even when the answer is no.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-visual">
+          <div class="workflow-mock">
+            <div class="mock-topbar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-title">Pipeline status</span>
+            </div>
+            <div style="font-size:.82rem;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm)"><span style="color:var(--ink-2)">Ravi S.</span><span class="badge badge-amber">Awaiting recruiter</span></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm)"><span style="color:var(--ink-2)">Priya M.</span><span class="badge badge-green">Interview scheduled</span></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm)"><span style="color:var(--ink-2)">Sunita K.</span><span class="badge badge-purple">Screening running</span></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm)"><span style="color:var(--ink-2)">Ankit R.</span><span class="badge badge-gray">Queued for outreach</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HANDOFF -->
+      <div class="workflow-panel" id="panel-handoff" role="tabpanel" aria-labelledby="tab-handoff">
+        <div class="workflow-content">
+          <h3>Clean handoff to your ATS and hiring manager</h3>
+          <p class="lead">When a candidate is ready for a human stage, ConverseAI packages the full evidence record and pushes it to your ATS — or delivers it directly to your recruiter's queue.</p>
+          <div class="workflow-details">
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">🔗</div>
+              <div class="workflow-detail-text"><strong>ATS integration</strong>Candidate records, screening scores, and transcripts sync to your existing ATS — no double entry.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">📊</div>
+              <div class="workflow-detail-text"><strong>Structured evidence package</strong>Each handoff includes a one-page evidence summary, scored criteria, and raw transcript links.</div>
+            </div>
+            <div class="workflow-detail">
+              <div class="workflow-detail-icon">🛡️</div>
+              <div class="workflow-detail-text"><strong>Recruiter always decides</strong>No offer, rejection, or progression happens without a human approval step — the system can recommend, not decide.</div>
+            </div>
+          </div>
+        </div>
+        <div class="workflow-visual">
+          <div class="workflow-mock">
+            <div class="mock-topbar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-title">ATS sync — Area Sales Manager</span>
+            </div>
+            <div style="font-size:.82rem;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--radius-sm)">
+                <span style="font-size:18px">✅</span>
+                <div><div style="color:var(--ink);font-weight:600">Ravi S. — synced to Workday</div><div style="color:var(--ink-3);font-size:.76rem">Screening score, transcript, criteria summary</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--radius-sm)">
+                <span style="font-size:18px">✅</span>
+                <div><div style="color:var(--ink);font-weight:600">Priya M. — synced to Workday</div><div style="color:var(--ink-3);font-size:.76rem">Awaiting hiring manager review</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #FEE2E2;border-radius:var(--radius-sm);background:#FFF5F5">
+                <span style="font-size:18px">⚠️</span>
+                <div><div style="color:#DC2626;font-weight:600">ATS update failed — Ankit R.</div><div style="color:#991B1B;font-size:.76rem">Token expired · <span style="text-decoration:underline;cursor:pointer">Retry</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════ CANDIDATE JOURNEY ══════════════ -->
+<section id="candidate-journey" class="section section-alt" aria-labelledby="journey-heading">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Candidate experience</div>
+      <h2 id="journey-heading">What candidates actually see</h2>
+      <p class="lead">The candidate experience is designed to feel respectful, transparent, and mobile-first — with clear AI disclosure, language choice, and a human fallback at every step.</p>
+    </div>
+
+    <div class="journey-grid" role="list">
+
+      <div class="journey-step" data-num="01" role="listitem">
+        <div class="journey-step-icon" aria-hidden="true">👋</div>
+        <h4>Welcome & context</h4>
+        <p>The first message introduces the process — what it covers, how long it takes, and that they're speaking with an AI. Candidates know before they start.</p>
+        <div class="journey-disclosure">
+          "You're speaking with an AI assistant on behalf of [Company]. This takes about 8 minutes."
+        </div>
+      </div>
+
+      <div class="journey-step" data-num="02" role="listitem">
+        <div class="journey-step-icon" aria-hidden="true">🌐</div>
+        <h4>Language preference</h4>
+        <p>Candidates choose their preferred language — English or Hindi — before answering a single question. No assumption, no friction.</p>
+      </div>
+
+      <div class="journey-step" data-num="03" role="listitem">
+        <div class="journey-step-icon" aria-hidden="true">💬</div>
+        <h4>Structured conversation</h4>
+        <p>Questions are role-specific and conversational — not a form. The AI listens, follows up on unclear answers, and keeps the exchange natural.</p>
+      </div>
+
+      <div class="journey-step" data-num="04" role="listitem">
+        <div class="journey-step-icon" aria-hidden="true">⏸️</div>
+        <h4>Pause & reschedule</h4>
+        <p>Candidates can pause at any point and resume later — on the same channel. If they need to reschedule an interview, they reply with a date and it's handled automatically.</p>
+      </div>
+
+      <div class="journey-step" data-num="05" role="listitem">
+        <div class="journey-step-icon" aria-hidden="true">👤</div>
+        <h4>Human support option</h4>
+        <p>At any point, candidates can request to speak with a human. The handoff is instant — with full conversation context passed to your recruiter.</p>
+        <div class="journey-disclosure">
+          Opt-out: candidates can withdraw their application and request data deletion at any time.
+        </div>
+      </div>
+
+      <div class="journey-step" data-num="06" role="listitem">
+        <div class="journey-step-icon" aria-hidden="true">✅</div>
+        <h4>Completion & next step</h4>
+        <p>Candidates receive a confirmation of submission and a clear next step — what happens next, and when they'll hear back. No ghosting.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════ RECRUITER EVIDENCE REPORT ══════════════ -->
+<section id="evidence-report" class="section" aria-labelledby="evidence-heading">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Recruiter view</div>
+      <h2 id="evidence-heading">Evidence, not summaries</h2>
+      <p class="lead">Your recruiter receives a structured evidence report for each candidate — with verbatim quotes linked to specific criteria. Decisions are made on evidence, not AI opinions.</p>
+    </div>
+
+    <div class="evidence-demo" role="region" aria-label="Evidence report demo">
+      <div class="evidence-toolbar">
+        <div class="evidence-toolbar-left">
+          <div class="candidate-avatar" aria-hidden="true">RS</div>
+          <div>
+            <div class="candidate-name">Ravi Sharma</div>
+            <div class="candidate-role">Area Sales Manager — Delhi NCR</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="badge badge-green"><span class="dot"></span>Screening complete</span>
+          <span style="font-size:.8rem;color:var(--ink-3)">Reviewed 0 of 4</span>
+        </div>
+      </div>
+
+      <div class="evidence-body">
+        <div class="evidence-sidebar">
+          <div class="evidence-sidebar-title">Criteria</div>
+
+          <div class="criterion-item active" onclick="switchCriterion('c1', this)" role="button" tabindex="0" aria-pressed="true">
+            <span class="criterion-label">Distributor management experience</span>
+            <span class="criterion-expand" aria-hidden="true">›</span>
+          </div>
+          <div class="criterion-item" onclick="switchCriterion('c2', this)" role="button" tabindex="0" aria-pressed="false">
+            <span class="criterion-label">CTC expectations</span>
+            <span class="criterion-expand" aria-hidden="true">›</span>
+          </div>
+          <div class="criterion-item" onclick="switchCriterion('c3', this)" role="button" tabindex="0" aria-pressed="false">
+            <span class="criterion-label">Notice period</span>
+            <span class="criterion-expand" aria-hidden="true">›</span>
+          </div>
+          <div class="criterion-item" onclick="switchCriterion('c4', this)" role="button" tabindex="0" aria-pressed="false">
+            <span class="criterion-label">Territory coverage depth</span>
+            <span class="criterion-expand" aria-hidden="true">›</span>
+          </div>
+        </div>
+
+        <div class="evidence-main">
+          <!-- C1 -->
+          <div class="evidence-criterion-detail active" id="detail-c1">
+            <div class="evidence-q">Distributor management experience</div>
+            <div class="evidence-finding">Candidate reports 6 years of direct distributor management, with the last 3 years in a national FMCG brand operating across Uttar Pradesh. Handled a portfolio of 18 distributors across 4 districts.</div>
+            <div class="evidence-quote">"I've been managing distributors directly since 2018 — mostly FMCG. At my last company we had 18 distributors across UP. I handled the complete cycle: targets, claims, secondary push, everything."</div>
+            <div class="evidence-meta">
+              <span class="badge badge-green">Meets criteria</span>
+              <span class="evidence-link" onclick="alert('Full transcript would open here')">View in transcript ↗</span>
+              <span style="font-size:.78rem;color:var(--ink-3)">Q4 · 2m 14s in</span>
+            </div>
+            <div class="evidence-actions">
+              <button class="btn btn-primary btn-sm" onclick="markDecision(this, 'Progressed')">Progress candidate</button>
+              <button class="btn btn-outline btn-sm" onclick="markDecision(this, 'Flagged for review')">Flag for review</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="markDecision(this, 'Rejected')">Reject</button>
+            </div>
+          </div>
+          <!-- C2 -->
+          <div class="evidence-criterion-detail" id="detail-c2">
+            <div class="evidence-q">CTC expectations</div>
+            <div class="evidence-finding">Candidate states current CTC of ₹12.5L and is expecting ₹15–16L for the next role. This is within the defined range for the position.</div>
+            <div class="evidence-quote">"Right now I'm at 12.5 — I'm looking at 15 to 16 depending on the role and location. Is that in range?"</div>
+            <div class="evidence-meta">
+              <span class="badge badge-green">Meets criteria</span>
+              <span class="evidence-link" onclick="alert('Full transcript would open here')">View in transcript ↗</span>
+              <span style="font-size:.78rem;color:var(--ink-3)">Q6 · 4m 02s in</span>
+            </div>
+            <div class="evidence-actions">
+              <button class="btn btn-primary btn-sm" onclick="markDecision(this, 'Progressed')">Progress candidate</button>
+              <button class="btn btn-outline btn-sm" onclick="markDecision(this, 'Flagged for review')">Flag for review</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="markDecision(this, 'Rejected')">Reject</button>
+            </div>
+          </div>
+          <!-- C3 -->
+          <div class="evidence-criterion-detail" id="detail-c3">
+            <div class="evidence-q">Notice period</div>
+            <div class="evidence-finding">Candidate is serving a 60-day notice, with 30 days remaining as of the interview date. Can potentially negotiate early release. This partially meets the 30-day join requirement.</div>
+            <div class="evidence-quote">"I gave notice 30 days back — I have another 30 to go. My manager might let me leave early but I can't confirm that right now."</div>
+            <div class="evidence-meta">
+              <span class="badge badge-amber">Partial match</span>
+              <span class="evidence-link" onclick="alert('Full transcript would open here')">View in transcript ↗</span>
+              <span style="font-size:.78rem;color:var(--ink-3)">Q7 · 5m 31s in</span>
+            </div>
+            <div class="evidence-actions">
+              <button class="btn btn-primary btn-sm" onclick="markDecision(this, 'Progressed')">Progress candidate</button>
+              <button class="btn btn-outline btn-sm" onclick="markDecision(this, 'Flagged for review')">Flag for review</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="markDecision(this, 'Rejected')">Reject</button>
+            </div>
+          </div>
+          <!-- C4 -->
+          <div class="evidence-criterion-detail" id="detail-c4">
+            <div class="evidence-q">Territory coverage depth</div>
+            <div class="evidence-finding">Candidate has covered 4 districts in UP but has limited experience in the Delhi NCR region specifically. The target role requires familiarity with NCR distributor networks.</div>
+            <div class="evidence-quote">"Most of my experience is in UP — Lucknow, Kanpur, Agra, Meerut belt. Delhi NCR I've visited but never managed directly."</div>
+            <div class="evidence-meta">
+              <span class="badge badge-red">Gap identified</span>
+              <span class="evidence-link" onclick="alert('Full transcript would open here')">View in transcript ↗</span>
+              <span style="font-size:.78rem;color:var(--ink-3)">Q9 · 6m 45s in</span>
+            </div>
+            <div class="evidence-actions">
+              <button class="btn btn-primary btn-sm" onclick="markDecision(this, 'Progressed')">Progress candidate</button>
+              <button class="btn btn-outline btn-sm" onclick="markDecision(this, 'Flagged for review')">Flag for review</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="markDecision(this, 'Rejected')">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════ INTEGRATIONS + RESPONSIBILITY MATRIX ══════════════ -->
+<section id="integrations" class="section section-alt" aria-labelledby="integrations-heading">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Integrations & responsibilities</div>
+      <h2 id="integrations-heading">Fits into your stack. Clear on who owns what.</h2>
+      <p class="lead">ConverseAI connects to your existing ATS and HRMS, and works within your data policies. Every responsibility — candidate data, compliance, final decisions — is clearly assigned before the pilot begins.</p>
+    </div>
+
+    <div class="integrations-grid">
+      <div class="integration-card">
+        <h4>Platform integrations</h4>
+        <div class="int-row">
+          <div class="int-icon" aria-hidden="true">📊</div>
+          <div><div class="int-name">ATS / HRMS</div><div class="int-note">Workday, Darwinbox, Keka, SAP — configured per client</div></div>
+        </div>
+        <div class="int-row">
+          <div class="int-icon" aria-hidden="true">💬</div>
+          <div><div class="int-name">WhatsApp Business API</div><div class="int-note">Verified business number, template-approved messages</div></div>
+        </div>
+        <div class="int-row">
+          <div class="int-icon" aria-hidden="true">📞</div>
+          <div><div class="int-name">Voice / Phone</div><div class="int-note">Outbound call screening for candidates without smartphones</div></div>
+        </div>
+        <div class="int-row">
+          <div class="int-icon" aria-hidden="true">📅</div>
+          <div><div class="int-name">Calendar</div><div class="int-note">Google Calendar, Outlook — for interview scheduling</div></div>
+        </div>
+        <div class="int-row">
+          <div class="int-icon" aria-hidden="true">🔗</div>
+          <div><div class="int-name">Custom webhooks</div><div class="int-note">For teams with internal tooling or bespoke HRMS</div></div>
+        </div>
+      </div>
+
+      <div class="integration-card">
+        <h4>Responsibility matrix</h4>
+        <table class="matrix-table" role="table">
+          <thead>
+            <tr>
+              <th scope="col">Area</th>
+              <th scope="col">Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Role criteria & JD</td>
+              <td><span class="owner-badge owner-client">Client team</span></td>
+            </tr>
+            <tr>
+              <td>AI conversation design</td>
+              <td><span class="owner-badge owner-converse">ConverseAI</span></td>
+            </tr>
+            <tr>
+              <td>Candidate data storage</td>
+              <td><span class="owner-badge owner-shared">Shared</span></td>
+            </tr>
+            <tr>
+              <td>Shortlist decisions</td>
+              <td><span class="owner-badge owner-client">Client team</span></td>
+            </tr>
+            <tr>
+              <td>Offer & rejection</td>
+              <td><span class="owner-badge owner-client">Client team</span></td>
+            </tr>
+            <tr>
+              <td>Pipeline monitoring</td>
+              <td><span class="owner-badge owner-converse">ConverseAI</span></td>
+            </tr>
+            <tr>
+              <td>Escalations & exceptions</td>
+              <td><span class="owner-badge owner-converse">ConverseAI</span></td>
+            </tr>
+            <tr>
+              <td>Data deletion requests</td>
+              <td><span class="owner-badge owner-converse">ConverseAI</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pipeline status table -->
+    <div style="margin-top:40px">
+      <h3 style="margin-bottom:6px;font-size:1.05rem">Pipeline state visibility</h3>
+      <p style="font-size:.88rem;color:var(--ink-2);margin-bottom:0">Every candidate has a real-time state — visible to your team at any time via dashboard or ATS.</p>
+      <table class="pipeline-table" role="table" style="margin-top:16px">
+        <thead>
+          <tr>
+            <th scope="col">State</th>
+            <th scope="col">Meaning</th>
+            <th scope="col">Next action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge badge-gray">Queued</span></td><td>Outreach scheduled, not yet sent</td><td>ConverseAI sends first message</td></tr>
+          <tr><td><span class="badge badge-purple">Running</span></td><td>Active screening or interview in progress</td><td>System completes conversation</td></tr>
+          <tr><td><span class="badge badge-amber">Awaiting candidate</span></td><td>Follow-up sent, candidate hasn't responded</td><td>Auto-nudge after 24 hrs</td></tr>
+          <tr><td><span class="badge badge-amber" style="background:#FFF7E6;color:#B45309">Awaiting recruiter</span></td><td>Evidence report ready for review</td><td>Recruiter reviews and decides</td></tr>
+          <tr><td><span class="badge badge-green">Completed</span></td><td>Decision made, ATS updated</td><td>—</td></tr>
+          <tr><td><span class="badge badge-red">Failed</span></td><td>ATS sync error or system exception</td><td>ConverseAI ops team notified; manual resolve</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════ PILOT PATH ══════════════ -->
+<section id="pilot" class="section" aria-labelledby="pilot-heading">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Getting started</div>
+      <h2 id="pilot-heading">From conversation to live pilot in 4 steps</h2>
+      <p class="lead">Every engagement starts with a scoping conversation — not a sales process. We define a specific hiring challenge, build the pilot for that use case, and measure what actually matters.</p>
+    </div>
+
+    <div class="pilot-steps" role="list">
+      <div class="pilot-step" role="listitem">
+        <div class="pilot-step-num" aria-hidden="true">1</div>
+        <h4>Scope</h4>
+        <p>Define the role, volume, channels, and criteria. One call, 45 minutes.</p>
+      </div>
+      <div class="pilot-step" role="listitem">
+        <div class="pilot-step-num" aria-hidden="true">2</div>
+        <h4>Configure</h4>
+        <p>We build the screening flow, set up your ATS connection, and test internally.</p>
+      </div>
+      <div class="pilot-step" role="listitem">
+        <div class="pilot-step-num" aria-hidden="true">3</div>
+        <h4>Pilot</h4>
+        <p>Live pilot on a real role — typically 2–4 weeks, up to 100 candidates.</p>
+      </div>
+      <div class="pilot-step" role="listitem">
+        <div class="pilot-step-num" aria-hidden="true">4</div>
+        <h4>Review</h4>
+        <p>We review recruiter time saved, shortlist quality, and candidate experience — together.</p>
+      </div>
+    </div>
+
+    <div class="pilot-bottom">
+      <div class="pricing-card">
+        <div class="eyebrow" style="margin-bottom:14px">What's included in the pilot cost</div>
+        <h3>Transparent cost structure</h3>
+        <p class="lead">Pricing is scoped per pilot based on volume and integrations required. There's no platform fee until you confirm a full rollout.</p>
+        <div class="pricing-items">
+          <div class="pricing-item">
+            <span class="pricing-item-icon" aria-hidden="true">✓</span>
+            <span>Conversation design and flow build for up to 2 roles</span>
+          </div>
+          <div class="pricing-item">
+            <span class="pricing-item-icon" aria-hidden="true">✓</span>
+            <span>ATS / HRMS integration setup and testing</span>
+          </div>
+          <div class="pricing-item">
+            <span class="pricing-item-icon" aria-hidden="true">✓</span>
+            <span>WhatsApp Business API provisioning and template approval</span>
+          </div>
+          <div class="pricing-item">
+            <span class="pricing-item-icon" aria-hidden="true">✓</span>
+            <span>Live pilot operations — outreach, screening, follow-up, handoff</span>
+          </div>
+          <div class="pricing-item">
+            <span class="pricing-item-icon" aria-hidden="true">✓</span>
+            <span>Recruiter evidence reports for every screened candidate</span>
+          </div>
+          <div class="pricing-item">
+            <span class="pricing-item-icon" aria-hidden="true">✓</span>
+            <span>Post-pilot review session with metrics and recommendations</span>
+          </div>
+        </div>
+        <p class="pricing-note">Pricing is scoped per engagement. We'll send a clear quote after the scoping call — no surprises, no lock-in until you confirm rollout.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="card">
+          <h4 style="margin-bottom:8px;font-size:.95rem">When is a pilot the right call?</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--purple);font-weight:700;flex-shrink:0">✓</span>You have a specific high-volume role that recurs — sales, operations, collections, field staff</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--purple);font-weight:700;flex-shrink:0">✓</span>Recruiters are spending significant time on screening calls that don't convert</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--purple);font-weight:700;flex-shrink:0">✓</span>Response rates to email-based outreach are below 30%</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--purple);font-weight:700;flex-shrink:0">✓</span>Your team has an ATS but it's under-utilised because data entry is manual</div>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="margin-bottom:8px;font-size:.95rem">What we need from your side</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--ink-3);flex-shrink:0">→</span>A point of contact on the hiring team who can review evidence reports during the pilot</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--ink-3);flex-shrink:0">→</span>ATS credentials or API access (we'll guide the setup)</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--ink-2)"><span style="color:var(--ink-3);flex-shrink:0">→</span>A candidate list or source — or we can advise on how to build one</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════ FAQS ══════════════ -->
+<section id="faqs" class="section section-alt" aria-labelledby="faq-heading">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Common questions</div>
+      <h2 id="faq-heading">FAQs</h2>
+    </div>
+
+    <div class="faq-list" role="list">
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Do candidates know they're talking to an AI?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Yes — always. The very first message discloses that the candidate is speaking with an AI assistant on behalf of the hiring company. This is non-negotiable and is built into every flow. Candidates who prefer a human can request one, and the system hands off with full context.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Can the AI make a hiring decision?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">No. ConverseAI gathers evidence and surfaces it to your recruiter — scored, structured, and linked to verbatim candidate quotes. The shortlist decision, interview progression, offer, and rejection all require a human to act. The system can recommend, but it cannot decide.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          What ATS systems do you integrate with?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">We've built integrations for Workday, Darwinbox, Keka, SAP SuccessFactors, and Greenhouse. For teams with internal or bespoke HRMS, we support webhook-based integration. The exact setup is confirmed during the scoping call — before any commitment is made.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          What happens when a candidate doesn't respond or drops off?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">The system sends up to two follow-up nudges at configured intervals. If a candidate still hasn't responded, they move to an "Awaiting candidate" state and your recruiter is notified. Candidates who resume later pick up where they left off — their progress is saved. No data is lost, and no candidate is silently dropped.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          How is candidate data handled and stored?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Candidate data is stored securely and used only for the specific hiring engagement. Candidates can request data deletion at any point during or after the process — the system handles this automatically. Detailed data policies are provided during the scoping call and included in the engagement agreement.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          How long does it take to go live?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">From scoping call to first candidate message is typically 10–14 days. The primary variables are ATS integration complexity and WhatsApp template approval timelines (usually 2–5 business days). We'll give you an exact timeline during the scoping call based on your specific stack.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Can we run this in Hindi only, or alongside English?
+          <span class="faq-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="faq-answer" role="region">
+          <div class="faq-answer-inner">Yes. The system supports Hindi and English — candidates choose their preferred language at the start. You can configure which languages are available for each role. Mixed-language responses (Hinglish) are handled gracefully without breaking the conversation flow.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════ CONTACT ══════════════ -->
+<section id="contact" class="section" aria-labelledby="contact-heading">
+  <div class="wrap contact-grid">
+
+    <div class="contact-info">
+      <div class="eyebrow">Get in touch</div>
+      <h2 id="contact-heading">Let's scope a pilot for your team</h2>
+      <p class="lead">Tell us about the role and volume you're dealing with. We'll set up a 45-minute scoping call — no sales process, just a real conversation about whether this fits.</p>
+      <div class="contact-channels" style="margin-top:28px" role="list">
+        <a href="https://wa.me/919982323333" target="_blank" rel="noopener" class="contact-channel" aria-label="WhatsApp ConverseAI">
+          <span class="contact-channel-icon" aria-hidden="true">💬</span>
+          <div>
+            <div class="contact-channel-label">WhatsApp</div>
+            <div class="contact-channel-value">+91 99823 23333</div>
+          </div>
+        </a>
+        <a href="mailto:contact@theconverseai.com" class="contact-channel" aria-label="Email ConverseAI">
+          <span class="contact-channel-icon" aria-hidden="true">✉️</span>
+          <div>
+            <div class="contact-channel-label">Email</div>
+            <div class="contact-channel-value">contact@theconverseai.com</div>
+          </div>
+        </a>
+        <a href="https://theconverseai.com" target="_blank" rel="noopener" class="contact-channel" aria-label="ConverseAI website">
+          <span class="contact-channel-icon" aria-hidden="true">🌐</span>
+          <div>
+            <div class="contact-channel-label">Website</div>
+            <div class="contact-channel-value">theconverseai.com</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap">
+      <form id="pilot-form" class="card" novalidate aria-label="Pilot enquiry form" onsubmit="handleFormSubmit(event)">
+        <div class="form-group" id="fg-name">
+          <label class="form-label" for="f-name">Your name</label>
+          <input type="text" id="f-name" name="name" class="form-input" placeholder="Priya Sharma" autocomplete="name" required />
+          <span class="form-error" role="alert">Please enter your name</span>
+        </div>
+        <div class="form-group" id="fg-company">
+          <label class="form-label" for="f-company">Company</label>
+          <input type="text" id="f-company" name="company" class="form-input" placeholder="Tata Motors, ABC Corp…" autocomplete="organization" required />
+          <span class="form-error" role="alert">Please enter your company name</span>
+        </div>
+        <div class="form-group" id="fg-email">
+          <label class="form-label" for="f-email">Work email</label>
+          <input type="email" id="f-email" name="email" class="form-input" placeholder="priya@company.com" autocomplete="email" required />
+          <span class="form-error" role="alert">Please enter a valid email address</span>
+        </div>
+        <div class="form-group" id="fg-volume">
+          <label class="form-label" for="f-volume">Monthly hiring volume</label>
+          <select id="f-volume" name="volume" class="form-input" required>
+            <option value="" disabled selected>Select range</option>
+            <option value="1-20">1–20 candidates / month</option>
+            <option value="21-100">21–100 candidates / month</option>
+            <option value="101-500">101–500 candidates / month</option>
+            <option value="500+">500+ candidates / month</option>
+          </select>
+          <span class="form-error" role="alert">Please select your hiring volume</span>
+        </div>
+        <div class="form-group" id="fg-message">
+          <label class="form-label" for="f-message">What role or challenge are you dealing with? <span style="font-weight:400;color:var(--ink-3)">(optional)</span></label>
+          <textarea id="f-message" name="message" class="form-input" rows="3" placeholder="e.g. We hire 50+ sales executives a month and screening calls are eating recruiter time…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Request a scoping call</button>
+      </form>
+
+      <div class="form-success" id="form-success" role="alert" aria-live="assertive">
+        <div class="form-success-icon" aria-hidden="true">✅</div>
+        <h3>Request received</h3>
+        <p>We'll reach out within one business day to schedule the scoping call. You can also WhatsApp us directly at +91 99823 23333 if you'd like a faster response.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="logo-white.png" alt="ConverseAI" loading="lazy" />
+        <p>AI hiring infrastructure for Indian enterprises — outreach, screening, and scheduling, run end-to-end.</p>
+      </div>
+      <div class="footer-links" role="navigation" aria-label="Footer navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#candidate-journey">Candidate experience</a>
+        <a href="#integrations">Integrations</a>
+        <a href="#pilot">Pilot</a>
+        <a href="#faqs">FAQs</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 ConverseAI · <a href="mailto:contact@theconverseai.com" style="color:rgba(255,255,255,.4)">contact@theconverseai.com</a> · <a href="https://theconverseai.com" target="_blank" rel="noopener" style="color:rgba(255,255,255,.4)">theconverseai.com</a></span>
+      <div class="footer-legal">
+        <span style="color:rgba(255,255,255,.25);font-size:.75rem">This page is for qualified enterprise prospects only and is not indexed publicly.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════ SCRIPTS ══════════════ -->
+<script>
+/* ── Workflow tabs ── */
+function switchTab(name) {
+  document.querySelectorAll('.workflow-tab').forEach(t => {
+    t.classList.toggle('active', t.getAttribute('onclick').includes("'" + name + "'"));
+    t.setAttribute('aria-selected', t.classList.contains('active'));
+  });
+  document.querySelectorAll('.workflow-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-' + name);
+  });
+}
+
+/* ── Recruiter evidence criteria ── */
+function switchCriterion(id, el) {
+  document.querySelectorAll('.criterion-item').forEach(c => {
+    c.classList.remove('active');
+    c.setAttribute('aria-pressed', 'false');
+  });
+  document.querySelectorAll('.evidence-criterion-detail').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
+  var detail = document.getElementById('detail-' + id);
+  if (detail) detail.classList.add('active');
+}
+
+/* ── Keyboard support for criterion items ── */
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.criterion-item').forEach(function(item) {
+    item.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        item.click();
+      }
+    });
+  });
+});
+
+/* ── Evidence action buttons ── */
+function markDecision(btn, label) {
+  var actions = btn.closest('.evidence-actions');
+  actions.innerHTML = '<span class="badge badge-' + (label==='Progressed'?'green':label==='Flagged for review'?'amber':'red') + '"><span class="dot"></span>' + label + '</span><span style="font-size:.8rem;color:var(--ink-3);margin-left:8px">Decision recorded</span>';
+}
+
+/* ── FAQs ── */
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(i) {
+    i.classList.remove('open');
+    i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+/* ── Mobile nav ── */
+function toggleMobileMenu() {
+  var links = document.querySelector('.nav-links');
+  if (!links) return;
+  var isVisible = links.style.display === 'flex';
+  links.style.display = isVisible ? '' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = 'absolute';
+  links.style.top = '64px';
+  links.style.left = '0';
+  links.style.right = '0';
+  links.style.background = 'var(--bg)';
+  links.style.padding = '12px 24px 20px';
+  links.style.borderBottom = '1px solid var(--border-2)';
+  links.style.zIndex = '99';
+  if (isVisible) links.removeAttribute('style');
+}
+
+/* ── Contact form ── */
+function handleFormSubmit(e) {
+  e.preventDefault();
+  var form = document.getElementById('pilot-form');
+  var valid = true;
+
+  var fields = [
+    { id: 'f-name',    group: 'fg-name',    validate: function(v){ return v.trim().length > 0; } },
+    { id: 'f-company', group: 'fg-company', validate: function(v){ return v.trim().length > 0; } },
+    { id: 'f-email',   group: 'fg-email',   validate: function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); } },
+    { id: 'f-volume',  group: 'fg-volume',  validate: function(v){ return v !== ''; } }
+  ];
+
+  fields.forEach(function(f) {
+    var el = document.getElementById(f.id);
+    var group = document.getElementById(f.group);
+    if (!f.validate(el.value)) {
+      group.classList.add('has-error');
+      valid = false;
+    } else {
+      group.classList.remove('has-error');
+    }
+  });
+
+  if (!valid) return;
+
+  /* Build WhatsApp / mailto fallback — no backend needed for pilot */
+  var name = document.getElementById('f-name').value.trim();
+  var company = document.getElementById('f-company').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var volume = document.getElementById('f-volume').value;
+  var message = document.getElementById('f-message').value.trim();
+
+  var waText = encodeURIComponent(
+    'Hi ConverseAI,\n\nI\'d like to discuss an AI hiring pilot.\n\nName: ' + name +
+    '\nCompany: ' + company +
+    '\nEmail: ' + email +
+    '\nHiring volume: ' + volume +
+    (message ? '\n\nContext: ' + message : '')
+  );
+
+  /* Show success state */
+  form.style.display = 'none';
+  document.getElementById('form-success').classList.add('visible');
+
+  /* Open WhatsApp in background */
+  setTimeout(function() {
+    window.open('https://wa.me/919982323333?text=' + waText, '_blank', 'noopener');
+  }, 600);
+}
+
+/* ── Scroll-based nav highlight ── */
+(function() {
+  var sections = ['how-it-works', 'candidate-journey', 'evidence-report', 'integrations', 'pilot', 'faqs', 'contact'];
+  var navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', function() {
+    var scrollY = window.scrollY + 80;
+    var current = '';
+    sections.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) current = id;
+    });
+    navLinks.forEach(function(a) {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--purple)' : '';
+      a.style.background = a.getAttribute('href') === '#' + current ? 'var(--lavender)' : '';
+    });
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>
