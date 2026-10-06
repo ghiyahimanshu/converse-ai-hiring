@@ -1507,12 +1507,49 @@ function handleFormSubmit(e) {
 
   if (!valid) return;
 
-  /* Build WhatsApp / mailto fallback — no backend needed for pilot */
   var name = document.getElementById('f-name').value.trim();
   var company = document.getElementById('f-company').value.trim();
   var email = document.getElementById('f-email').value.trim();
   var volume = document.getElementById('f-volume').value;
   var message = document.getElementById('f-message').value.trim();
+
+  // Split name into First_Name and Last_Name (Zoho requires Last_Name)
+  var nameParts = name.split(/\s+/);
+  var firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : '';
+  var lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0];
+
+  // Current page context and URL tracking
+  var currentUrl = window.location.href;
+  var designationContext = message
+    ? message + ' | Source: Hiring Page (' + currentUrl + ')'
+    : 'Source: Hiring Page (' + currentUrl + ')';
+
+  // Zoho CRM Field Mapping
+  var leadPayload = {
+    First_Name: firstName,
+    Last_Name: lastName,
+    Company: company,
+    Secondary_Email: email,
+    Lead_Status: volume,
+    Designation: designationContext,
+    Lead_Source: 'Hiring Page',
+    Page_URL: currentUrl
+  };
+
+  // Map monthly hiring volume to Zoho exact dropdown value
+  var volumeMap = {
+    '1-20': '1-20 candidates / month',
+    '21-100': '21-100 candidates / month',
+    '101-500': '101-500 candidates / month',
+    '500+': '500+ candidates / month'
+  };
+  var volumeText = volumeMap[volume] || volume;
+
+  var submitBtn = form.querySelector('.form-submit');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+  }
 
   var waText = encodeURIComponent(
     'Hi ConverseAI,\n\nI\'d like to discuss an AI hiring pilot.\n\nName: ' + name +
@@ -1522,14 +1559,81 @@ function handleFormSubmit(e) {
     (message ? '\n\nContext: ' + message : '')
   );
 
-  /* Show success state */
-  form.style.display = 'none';
-  document.getElementById('form-success').classList.add('visible');
+  function finishSubmission() {
+    /* Show success state */
+    form.style.display = 'none';
+    document.getElementById('form-success').classList.add('visible');
 
-  /* Open WhatsApp in background */
-  setTimeout(function() {
-    window.open('https://wa.me/919982323333?text=' + waText, '_blank', 'noopener');
-  }, 600);
+    /* Open WhatsApp in background */
+    setTimeout(function() {
+      window.open('https://wa.me/919982323333?text=' + waText, '_blank', 'noopener');
+    }, 600);
+  }
+
+  // 1. Direct Web-to-Lead POST to Zoho CRM (runs seamlessly in local & production)
+  try {
+    var iframe = document.getElementById('zoho-submit-frame');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'zoho-submit-frame';
+      iframe.name = 'zoho-submit-frame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    var zohoForm = document.createElement('form');
+    zohoForm.method = 'POST';
+    zohoForm.action = 'https://crm.zoho.in/crm/WebToLeadForm';
+    zohoForm.target = 'zoho-submit-frame';
+    zohoForm.acceptCharset = 'UTF-8';
+    zohoForm.style.display = 'none';
+
+    var zohoFields = {
+      'xnQsjsdp': 'c3da59e9faefad6b8e68c4f5ecd7ba5f65b80c0fcdc9976dc5bd154c2631d632',
+      'zc_gad': '',
+      'xmIwtLD': '1aa92cb9919038d28fdce860b8de87fbb32640a4147dc893d88a1c8fc12779c11df7f386e52ee35f0dc0e861206c02f8',
+      'actionType': 'TGVhZHM=',
+      'returnURL': currentUrl,
+      'First Name': firstName,
+      'Last Name': lastName,
+      'Company': company,
+      'Email': email,
+      'Secondary Email': email,
+      'Lead Status': volumeText,
+      'Designation': message,
+      'Twitter': currentUrl,
+      'aG9uZXlwb3Q': ''
+    };
+
+    for (var fld in zohoFields) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = fld;
+      input.value = zohoFields[fld];
+      zohoForm.appendChild(input);
+    }
+
+    document.body.appendChild(zohoForm);
+    zohoForm.submit();
+    setTimeout(function() {
+      if (zohoForm.parentNode) zohoForm.parentNode.removeChild(zohoForm);
+    }, 1200);
+  } catch (zErr) {
+    console.error('Zoho direct form submit error:', zErr);
+  }
+
+  // 2. Also forward to serverless API endpoint if available
+  fetch('/api/submit-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(leadPayload)
+  })
+  .catch(function(err) {
+    /* Optional backend fallback */
+  })
+  .finally(function() {
+    finishSubmission();
+  });
 }
 
 /* ── Scroll-based nav highlight ── */
