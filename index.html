@@ -1570,7 +1570,34 @@ function handleFormSubmit(e) {
     }, 600);
   }
 
-  // 1. Direct Web-to-Lead POST to Zoho CRM (runs seamlessly in local & production)
+  // 1. Direct Web-to-Lead POST to Zoho CRM (runs seamlessly across all environments)
+  var zohoFields = {
+    'xnQsjsdp': 'c3da59e9faefad6b8e68c4f5ecd7ba5f65b80c0fcdc9976dc5bd154c2631d632',
+    'zc_gad': '',
+    'xmIwtLD': '1aa92cb9919038d28fdce860b8de87fbb32640a4147dc893d88a1c8fc12779c11df7f386e52ee35f0dc0e861206c02f8',
+    'actionType': 'TGVhZHM=',
+    'returnURL': currentUrl,
+    'First Name': firstName,
+    'Last Name': lastName,
+    'Company': company,
+    'Email': email,
+    'Secondary Email': email,
+    'Lead Status': volumeText,
+    'Designation': message,
+    'Twitter': currentUrl,
+    'aG9uZXlwb3Q': ''
+  };
+
+  try {
+    var zohoParams = new URLSearchParams(zohoFields);
+    fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: zohoParams
+    }).catch(function(e) {});
+  } catch (zFetchErr) {}
+
   try {
     var iframe = document.getElementById('zoho-submit-frame');
     if (!iframe) {
@@ -1587,23 +1614,6 @@ function handleFormSubmit(e) {
     zohoForm.target = 'zoho-submit-frame';
     zohoForm.acceptCharset = 'UTF-8';
     zohoForm.style.display = 'none';
-
-    var zohoFields = {
-      'xnQsjsdp': 'c3da59e9faefad6b8e68c4f5ecd7ba5f65b80c0fcdc9976dc5bd154c2631d632',
-      'zc_gad': '',
-      'xmIwtLD': '1aa92cb9919038d28fdce860b8de87fbb32640a4147dc893d88a1c8fc12779c11df7f386e52ee35f0dc0e861206c02f8',
-      'actionType': 'TGVhZHM=',
-      'returnURL': currentUrl,
-      'First Name': firstName,
-      'Last Name': lastName,
-      'Company': company,
-      'Email': email,
-      'Secondary Email': email,
-      'Lead Status': volumeText,
-      'Designation': message,
-      'Twitter': currentUrl,
-      'aG9uZXlwb3Q': ''
-    };
 
     for (var fld in zohoFields) {
       var input = document.createElement('input');
