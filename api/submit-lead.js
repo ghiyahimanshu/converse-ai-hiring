@@ -101,7 +101,6 @@ export default async function handler(req, res) {
       'First Name': First_Name || '',
       'Last Name': Last_Name || 'Lead',
       'Company': Company || 'Not Specified',
-      'Email': Secondary_Email || '',
       'Secondary Email': Secondary_Email || '',
       'Lead Status': Lead_Status || '',
       'Designation': Designation || '',
